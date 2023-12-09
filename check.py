@@ -11,7 +11,7 @@ Config.set('graphics', 'height', 640)
 
 class MyCalcApp(App):
     def build(self):
-        """В этом методе мы создаём общий вид нашего приложения
+        """В этой функции мы создаём общий вид нашего приложения
         :cvar
             Answers: Поле с ответами и кнопкой
             AnswersLabel: Поле вывода ответов
@@ -26,15 +26,15 @@ class MyCalcApp(App):
         self.Page1 = BoxLayout(orientation='vertical')
         self.variablesCount = TextInput(text='2')
         self.rowsCount = TextInput(text='2')
-        self.x = int(self.variablesCount.text) + 1
-        self.y = int(self.rowsCount.text)
+        self.x = x = int(self.variablesCount.text) + 1
+        self.y = y = int(self.rowsCount.text)
         self.Layout = GridLayout(cols=2, row_force_default=True, row_default_height=30, padding=10)
         submit = Button(text='Подтвердить характеристики системы', on_press=self.submit)
         self.Layout.add_widget(self.variablesCount)
         self.Layout.add_widget(self.rowsCount)
         self.Layout.add_widget(submit)
-        self.coefField = GridLayout(cols=self.x, row_force_default=True, row_default_height=30, padding=10)
-        for i in range(self.x * self.y):
+        self.coefField = GridLayout(cols=x, row_force_default=True, row_default_height=30, padding=10)
+        for i in range(x * y):
             self.coefField.add_widget(TextInput(text='0'))
         self.Answers = BoxLayout(padding=10)
         btnCount = Button(text='Решить', height=30, width=120, on_press=self.countAnswers, size_hint=(.4, .3))
@@ -47,7 +47,7 @@ class MyCalcApp(App):
         return self.Page1
 
     def submit(self, obj):
-        """Этот метод создаёт правильное поле относительно вводимых значений количества переменных и количества уравнений.
+        """Эта функция создаёт правильное поле относительно вводимых значений количества переменных и количества уравнений.
                 :cvar
                     x: Ширина Матрицы
                     y: Высота матрицы
@@ -63,7 +63,7 @@ class MyCalcApp(App):
             self.coefField.add_widget(TextInput())
 
     def countAnswers(self, obj):
-        """Этот метод выводит ответ от методе Gauss() в поле AnswersLabel."""
+        """Эта функция выводит ответ от функции Gauss() в поле AnswersLabel."""
         mass = []
         for i in self.coefField.children:
             mass.append(i.text)
@@ -76,7 +76,7 @@ class MyCalcApp(App):
         self.AnswersLabel.text = 'Ответ: ' + MyCalcApp.Gauss(self, mx, self.x, self.y)
 
     def nod_decreaser(self, m):
-        """Данный метод получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выходе метод выдаёт список, НОД чисел которого равен 1.
+        """Данная фунция получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выходе функция выдаёт список, НОД чисел которого равен 1.
         Args:
             m (list): Исходная дробь a/b в виде списка [a, b].
         Returns:
@@ -91,10 +91,6 @@ class MyCalcApp(App):
                 indicator = 0
             else:
                 indicator = -1
-            i = 1
-            if m[0] < 0:
-                i = -1
-                m[0] *= -1
             m1 = m[0 + indicator]
             m2 = m[1 + indicator]
             nod = 1
@@ -106,12 +102,10 @@ class MyCalcApp(App):
             nod = m1
             m1 = int(m[0] / nod)
             m2 = int(m[1] / nod)
-            if m2 < 0:
-                m1, m2 = m1 * -1, m2 * -1
-            return [m1*i, m2]
+            return [m1, m2]
 
     def number_returner(self, m):
-        """Данный метод получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выход возвращается строка 'a/b'.
+        """Данная функция получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выход возвращается строка 'a/b'.
         Args:
             self: Источник наследования
             m (list): Исходная дробь a/b в виде списка [a, b].
@@ -130,7 +124,7 @@ class MyCalcApp(App):
             return str(m[0]) + '/' + str(m[1])
 
     def division_converter(self, number):
-        """Этот метод преобразует текстовую запись числа в список [a, b], являющийся интерпретацией дроби a/b.
+        """Эта функция преобразует текстовую запись числа в список [a, b], являющийся интерпретацией дроби a/b.
         Args:
             self: Источник наследования
             number (str): Текстовый формат числа
@@ -138,12 +132,6 @@ class MyCalcApp(App):
             Список вида [a, b]
         """
         # вид: 1/2, 0.5, 0,5, 1 1/2, 1+1/2 превратится в [1, 2] или [3, 2]
-        if number.count('-') >0:
-            i = 1
-            number = number.replace('-', '', 1)
-            number = number.replace('-', '+')
-        else:
-            i = 0
         if number.count('.') == 1:
             a_before, a_after = number.split('.')
             result = [int(a_after) + int(a_before) * 10 ** len(a_after), 10 ** len(a_after)]
@@ -164,15 +152,16 @@ class MyCalcApp(App):
                 result = [int(a_top), int(a_bottom)]
         elif number == '':
             result = [0, 1]
-        else:
+        elif number == str(number):
             result = [int(number), 1]
-        if i == 1:
-            result[0] *= -1
+        else:
+            result = number
+
         # Сокращение дроби
         return MyCalcApp.nod_decreaser(self, result)
 
     def sorter(self, mx, stro, sto):  # mx -матрица, sto - столбец
-        """Данный метод сортирует строки таким образом, что на пересечении рассматриваемых строки stro и столбца sto не будет нуля в виде [0, 1].
+        """Данная функция сортирует строки таким образом, что на пересечении рассматриваемых строки stro и столбца sto не будет нуля в виде [0, 1].
         Args:
             self: Источник наследования
             mx (list): Матрица
@@ -195,41 +184,41 @@ class MyCalcApp(App):
                 return 'Nothing'
 
     def math(self, a, b):
-        """Этот метод получает на вход два списка - дроби, а возвращает список - сумму дробей.
+        """Эта функция получает на вход два списка - дроби, а возвращает список - сумму дробей.
         Args:
             self: Источник наследования
             a, b (list): Дробь m/n вида [m, n]
         Returns:
             Список-сумму дробей
         """
-        result = MyCalcApp.nod_decreaser(self, [a[0] * b[1] + b[0] * a[1], a[1] * b[1]])
+        result = MyCalcApp.division_converter(self, [a[0] * b[1] + b[0] * a[1], a[1] * b[1]])
         return result
 
     def divider(self, a, b):
-        """Этот метод получает на вход два списка - дроби, а возвращает список - частое дробей.
+        """Эта функция получает на вход два списка - дроби, а возвращает список - частое дробей.
         Args:
             self: Источник наследования
             a, b (list): Дробь m/n вида [m, n]
         Returns:
             Список-частное дробей
         """
-        result = MyCalcApp.nod_decreaser(self, [a[0] * b[1], a[1] * b[0]])
+        result = MyCalcApp.division_converter(self, [a[0] * b[1], a[1] * b[0]])
         return result
 
     def multiplier(self, a, b):
-        """Эта метод получает на вход два списка - дроби, а возвращает список - произведение дробей.
+        """Эта функция получает на вход два списка - дроби, а возвращает список - произведение дробей.
         Args:
             self: Источник наследования
             a, b (list): Дробь m/n вида [m, n]
         Returns:
             Список-произведение дробей
         """
-        result = MyCalcApp.nod_decreaser(self, [a[0] * b[0], a[1] * b[1]])
+        result = MyCalcApp.division_converter(self, [a[0] * b[0], a[1] * b[1]])
         return result
 
     def stro_count(self, mx, i1, i2, x,
                    k):  # mx - матрица, i1 - исходная строка, i2 - побочная строка, x - дл. строки, k - рассм. столбец
-        """Этот метод вычитает строку i1 из строки i2 столько раз, чтобы столбец k обнулился.
+        """Эта функция вычитает строку i1 из строки i2 столько раз, чтобы столбец k обнулился.
         Args:
             self: Источник наследования
             mx (list): Матрица
@@ -246,7 +235,7 @@ class MyCalcApp(App):
         return mx
 
     def mx_solver(self, mx, x, y):
-        """Данный метод делит на первый ненулевой коэффициент всю строку.
+        """Данная функция делит на первый ненулевой коэффициент всю строку.
         Args:
             self: Источник наследования
             mx (list): Матрица
@@ -266,7 +255,7 @@ class MyCalcApp(App):
         return mx
 
     def Gauss(self, mx, x, y):
-        """В этом методе реализован метод Гаусса.
+        """В этой функции реализован метод Гаусса.
         Args:
             self: Источник наследования
             mx (list): Матрица
@@ -339,7 +328,7 @@ class MyCalcApp(App):
         return (answers)
 
     def reversed_Gauss(self, mx, x, y):
-        """Этот метод освобождает матрицу от ненужных элементов методом Гаусса, но снизу-вверх.
+        """Эта функция освобождает матрицу от ненужных элементов методом Гаусса, но снизу-вверх.
         Args:
             self: Источник наследования
             mx (list): Матрица

@@ -1,0 +1,1 @@
+pydoctor --make-html --html-output=docs --project-base-dir="." --docformat=restructuredtext .\Matrix_solver_App.py
