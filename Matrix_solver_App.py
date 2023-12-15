@@ -10,8 +10,13 @@ Config.set('graphics', 'height', 640)
 
 
 class MyCalcApp(App):
+    """
+    Приложение, решающее систему линейных уравнений.
+    """
+    @property
     def build(self):
         """В этом методе мы создаём общий вид нашего приложения
+
         :cvar
             Answers: Поле с ответами и кнопкой
             AnswersLabel: Поле вывода ответов
@@ -22,6 +27,7 @@ class MyCalcApp(App):
             variableCount: Поле количества переменных
             x: Ширина Матрицы
             y: Высота матрицы
+
         """
         self.Page1 = BoxLayout(orientation='vertical')
         self.variablesCount = TextInput(text='2')
@@ -48,9 +54,11 @@ class MyCalcApp(App):
 
     def submit(self, obj):
         """Этот метод создаёт правильное поле относительно вводимых значений количества переменных и количества уравнений.
+
                 :cvar
                     x: Ширина Матрицы
                     y: Высота матрицы
+
         """
         self.AnswersLabel.text = 'Ответ: '
         self.x = int(self.variablesCount.text.replace('\n', '')) + 1
@@ -63,7 +71,7 @@ class MyCalcApp(App):
             self.coefField.add_widget(TextInput())
 
     def countAnswers(self, obj):
-        """Этот метод выводит ответ от методе Gauss() в поле AnswersLabel."""
+        """Этот метод выводит ответ метода Gauss() в поле AnswersLabel."""
         mass = []
         for i in self.coefField.children:
             mass.append(i.text)
@@ -76,11 +84,14 @@ class MyCalcApp(App):
         self.AnswersLabel.text = 'Ответ: ' + MyCalcApp.Gauss(self, mx, self.x, self.y)
 
     def nod_decreaser(self, m):
-        """Данный метод получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выходе метод выдаёт список, НОД чисел которого равен 1.
-        Args:
-            m (list): Исходная дробь a/b в виде списка [a, b].
-        Returns:
-            list: Несократимая дробь a/b в виде списка [a, b].
+        """Данный метод получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выходе метод выдаёт список сокращённых чисел, НОД чисел которого равен 1.
+
+            :param self: Источник наследования
+            :param m: Исходная дробь a/b в виде списка [a, b].
+            :type m: list
+            :returns: Несократимая дробь a/b в виде списка [a, b].
+            :rtype: list
+
         """
         if m[0] == m[1]:
             return [1, 1]
@@ -108,15 +119,17 @@ class MyCalcApp(App):
             m2 = int(m[1] / nod)
             if m2 < 0:
                 m1, m2 = m1 * -1, m2 * -1
-            return [m1*i, m2]
+            return [m1 * i, m2]
 
     def number_returner(self, m):
         """Данный метод получает на вход список [a, b], являющийся интерпретацией дроби a/b. На выход возвращается строка 'a/b'.
-        Args:
-            self: Источник наследования
-            m (list): Исходная дробь a/b в виде списка [a, b].
-        Returns:
-            Строковое значение от числа.
+        
+            :param self: Источник наследования
+            :param m: Исходная дробь a/b в виде списка [a, b].
+            :type m: list
+            :returns: Строковое значение от числа.
+            :rtype: list
+
         """
         if m == [0, 1]:
             return '0'
@@ -131,14 +144,16 @@ class MyCalcApp(App):
 
     def division_converter(self, number):
         """Этот метод преобразует текстовую запись числа в список [a, b], являющийся интерпретацией дроби a/b.
-        Args:
-            self: Источник наследования
-            number (str): Текстовый формат числа
-        Returns:
-            Список вида [a, b]
+
+            :param self: Источник наследования
+            :param number: Текстовый формат числа
+            :type number: string
+        
+            :returns: Список вида [a, b]
+            :rtype: list
         """
         # вид: 1/2, 0.5, 0,5, 1 1/2, 1+1/2 превратится в [1, 2] или [3, 2]
-        if number.count('-') >0:
+        if number.count('-') > 0:
             i = 1
             number = number.replace('-', '', 1)
             number = number.replace('-', '+')
@@ -173,13 +188,16 @@ class MyCalcApp(App):
 
     def sorter(self, mx, stro, sto):  # mx -матрица, sto - столбец
         """Данный метод сортирует строки таким образом, что на пересечении рассматриваемых строки stro и столбца sto не будет нуля в виде [0, 1].
-        Args:
-            self: Источник наследования
-            mx (list): Матрица
-            stro (int): Номер строки
-            sto (int): Номер столбца
-        Returns:
-            Лист, для которого первая строка не нулевая в определённом столбце
+        
+            :param self: Источник наследования
+            :param mx: Матрица
+            :type mx: list
+            :param stro: Номер строки
+            :type stro: integer
+            :param sto: Номер столбца
+            :type sto: integer
+            :returns: Лист, для которого первая строка не нулевая в определённом столбце
+            :rtype: list
         """
         if mx[stro][sto] != [0, 1]:  # stro - рассматриваемая строка
             return mx
@@ -196,33 +214,44 @@ class MyCalcApp(App):
 
     def math(self, a, b):
         """Этот метод получает на вход два списка - дроби, а возвращает список - сумму дробей.
-        Args:
-            self: Источник наследования
-            a, b (list): Дробь m/n вида [m, n]
-        Returns:
-            Список-сумму дробей
+        
+            :param self: Источник наследования
+            :param a: Дробь m/n вида [m, n]
+            :type a: list
+            :param b: Дробь m/n вида [m, n]
+            :type b: list
+            :returns: Список-сумму дробей
+            :rtype: list
         """
         result = MyCalcApp.nod_decreaser(self, [a[0] * b[1] + b[0] * a[1], a[1] * b[1]])
         return result
 
     def divider(self, a, b):
-        """Этот метод получает на вход два списка - дроби, а возвращает список - частое дробей.
-        Args:
-            self: Источник наследования
-            a, b (list): Дробь m/n вида [m, n]
-        Returns:
-            Список-частное дробей
+        """Этот метод получает на вход два списка - дроби, а возвращает список - частное дробей.
+
+            :param self: Источник наследования
+            :param a: Дробь m/n вида [m, n]
+            :type a: list
+            :param b: Дробь m/n вида [m, n]
+            :type b: list
+            :returns: Список-частное дробей
+            :rtype: list
+
         """
         result = MyCalcApp.nod_decreaser(self, [a[0] * b[1], a[1] * b[0]])
         return result
 
     def multiplier(self, a, b):
         """Эта метод получает на вход два списка - дроби, а возвращает список - произведение дробей.
-        Args:
-            self: Источник наследования
-            a, b (list): Дробь m/n вида [m, n]
-        Returns:
-            Список-произведение дробей
+        
+            :param self: Источник наследования
+            :param a: Дробь m/n вида [m, n]
+            :type a: list
+            :param b: Дробь m/n вида [m, n]
+            :type b: list
+            :returns: Список-произведение дробей
+            :rtype: list
+
         """
         result = MyCalcApp.nod_decreaser(self, [a[0] * b[0], a[1] * b[1]])
         return result
@@ -230,15 +259,21 @@ class MyCalcApp(App):
     def stro_count(self, mx, i1, i2, x,
                    k):  # mx - матрица, i1 - исходная строка, i2 - побочная строка, x - дл. строки, k - рассм. столбец
         """Этот метод вычитает строку i1 из строки i2 столько раз, чтобы столбец k обнулился.
-        Args:
-            self: Источник наследования
-            mx (list): Матрица
-            i1 (int): Номер исходной строки
-            i2 (int): Номер побочной строки
-            x (int): Длина строки
-            k (int): Рассматриваемый столбец
-        Returns:
-            Список-матрицу, с посчитанной разностью
+        
+            :param self: Источник наследования
+            :param mx: Матрица
+            :type mx: list
+            :param i1: Номер исходной строки
+            :type i1: integer
+            :param i2: Номер побочной строки
+            :type i2: integer
+            :param x: Длина строки
+            :type x: integer
+            :param k: Рассматриваемый столбец
+            :type k: integer
+            :returns: Список-матрицу, с посчитанной разностью
+            :rtype: list
+
         """
         c = MyCalcApp.multiplier(self, MyCalcApp.divider(self, mx[i2][k], mx[i1][k]), [-1, 1])
         for i in range(x):
@@ -247,13 +282,16 @@ class MyCalcApp(App):
 
     def mx_solver(self, mx, x, y):
         """Данный метод делит на первый ненулевой коэффициент всю строку.
-        Args:
-            self: Источник наследования
-            mx (list): Матрица
-            x (int): Количество коэффициентов по ширине
-            y (int): Количество уравнений
-        Returns:
-            Список-матрицу
+        
+            :param self: Источник наследования
+            :param mx: Матрица
+            :type mx: list
+            :param x: Количество коэффициентов по ширине
+            :type x: integer
+            :param y: Количество уравнений
+            :type y: integer
+            :returns: Список-матрицу
+            :rtype: list
         """
         for i in range(y):
             for j in range(x):
@@ -267,13 +305,16 @@ class MyCalcApp(App):
 
     def Gauss(self, mx, x, y):
         """В этом методе реализован метод Гаусса.
-        Args:
-            self: Источник наследования
-            mx (list): Матрица
-            x (int): Количество коэффициентов по ширине
-            y (int): Количество уравнений
-        Returns:
-            Упрощённая матрица в виде списка для поиска корней
+        
+            :param self: Источник наследования
+            :param mx: Матрица
+            :type mx: list
+            :param x: Количество коэффициентов по ширине
+            :type x: integer
+            :param y: Количество уравнений
+            :type y: integer
+            :returns: Строку-ответ на систему
+            :rtype: string
         """
         i = 0
         k = 0
@@ -299,7 +340,7 @@ class MyCalcApp(App):
                 a -= 1
             elif checker_Summ == 0 and mx[a][x - 1][0] != 0:
                 flag = False
-                return 'Данная система не имеет решений'
+                return 'Данная система не имеет решений.'
         mx = MyCalcApp.mx_solver(self, mx, len(mx[0]), len(mx))
         basis = mx[-1][0]
         variables = ['x' + str(i + 1) for i in range(x - 1)]
@@ -340,13 +381,16 @@ class MyCalcApp(App):
 
     def reversed_Gauss(self, mx, x, y):
         """Этот метод освобождает матрицу от ненужных элементов методом Гаусса, но снизу-вверх.
-        Args:
-            self: Источник наследования
-            mx (list): Матрица
-            x (int): Количество коэффициентов по ширине
-            y (int): Количество уравнений
-        Returns:
-            Список-матрицу, для которой убираются ненужные элементы
+        
+            :param self: Источник наследования
+            :param mx: Матрица
+            :type mx: list
+            :param x: Количество коэффициентов по ширине
+            :type x: integer
+            :param y: Количество уравнений
+            :type y: integer
+            :returns: Список-матрицу, для которой убираются ненужные элементы
+            :rtype: list
         """
         basis = []
         answers = []
@@ -387,8 +431,8 @@ class MyCalcApp(App):
 
     def input_decide(self):  # возможности к расширению
         """Консольная вариация программы.
-        Args:
-            self: Источник наследования
+        
+            :param self: Источник наследования
         """
         m = input('Введите ID команды: ')
         if m == '0':
